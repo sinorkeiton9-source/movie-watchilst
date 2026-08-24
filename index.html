@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Watchlist — Track Your Movies</title>
+  <link rel="stylesheet" href="style.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+  <!-- Top Navigation -->
+  <nav class="top-nav">
+    <div class="nav-inner">
+      <div class="nav-left">
+        <span class="logo">🎬 Watchlist</span>
+      </div>
+      <div class="nav-right">
+        <button id="darkModeToggle" class="icon-btn" title="Toggle dark mode">
+          <span id="darkModeIcon">🌙</span>
+        </button>
+        <button id="discoverBtn" class="icon-btn" title="Discover users">
+          <span>👥</span>
+        </button>
+        <div class="profile-menu">
+          <button id="profileBtn" class="profile-btn">
+            <span id="profileAvatar" class="avatar">👤</span>
+            <span id="profileName" class="profile-name">Profile</span>
+          </button>
+          <div id="profileDropdown" class="dropdown">
+            <div class="dropdown-header">
+              <span id="dropdownAvatar" class="avatar-large">👤</span>
+              <div>
+                <p id="dropdownName" class="dropdown-name">Guest User</p>
+                <p id="dropdownStats" class="dropdown-stats">0 movies in watchlist</p>
+              </div>
+            </div>
+            <button id="editProfileBtn" class="dropdown-btn">Edit Profile</button>
+            <button id="switchProfileBtn" class="dropdown-btn">Switch Profile</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </nav>
+
+  <header class="site-header">
+    <div class="header-inner">
+      <h1>Your Movie Watchlist</h1>
+      <p class="tagline">Search, save, and rate movies you want to watch.</p>
+    </div>
+  </header>
+
+  <main class="main-content">
+    <!-- Search Section -->
+    <section class="search-section">
+      <div class="search-container">
+        <input 
+          type="text" 
+          id="searchInput" 
+          placeholder="Search for a movie..."
+          autocomplete="off"
+        >
+        <button id="searchBtn" class="primary-btn">Search</button>
+      </div>
+      <div id="searchResults" class="search-results"></div>
+    </section>
+
+    <!-- Watchlist Section -->
+    <section class="watchlist-section">
+      <div class="section-header">
+        <h2>My Watchlist</h2>
+        <div class="section-controls">
+          <div class="status-tabs">
+            <button class="status-tab active" data-status="all" onclick="setStatusFilter('all')">All</button>
+            <button class="status-tab" data-status="unfinished" onclick="setStatusFilter('unfinished')">Unfinished</button>
+            <button class="status-tab" data-status="finished" onclick="setStatusFilter('finished')">Finished</button>
+          </div>
+          <select id="sortSelect" class="sort-select">
+            <option value="newest">Newest First</option>
+            <option value="oldest">Oldest First</option>
+            <option value="title">Title (A-Z)</option>
+            <option value="rating">Rating (High to Low)</option>
+          </select>
+          <span id="count" class="count-badge">0 movies</span>
+        </div>
+      </div>
+      <div id="watchlist" class="watchlist-grid"></div>
+    </section>
+  </main>
+
+  <!-- Edit Profile Modal -->
+  <div id="profileModal" class="modal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h3>Edit Profile</h3>
+        <button id="closeModal" class="close-btn">✕</button>
+      </div>
+      <div class="modal-body">
+        <label class="form-label">Display Name</label>
+        <input type="text" id="modalNameInput" placeholder="Enter your name" class="form-input">
+        
+        <label class="form-label">Profile Picture</label>
+        <div class="pfp-upload">
+          <img id="pfpPreview" class="pfp-preview" src="" alt="Profile picture">
+          <input type="file" id="pfpInput" accept="image/*" class="pfp-input">
+        </div>
+        <p class="form-hint">Or choose an avatar:</p>
+        <div class="avatar-options">
+          <button class="avatar-option" onclick="selectAvatar('👤')">👤</button>
+          <button class="avatar-option" onclick="selectAvatar('🎬')">🎬</button>
+          <button class="avatar-option" onclick="selectAvatar('🍿')">🍿</button>
+          <button class="avatar-option" onclick="selectAvatar('🎥')">🎥</button>
+          <button class="avatar-option" onclick="selectAvatar('📽️')">📽️</button>
+          <button class="avatar-option" onclick="selectAvatar('⭐')">⭐</button>
+        </div>
+        
+        <label class="form-label">Profile Visibility</label>
+        <div class="visibility-options">
+          <label class="visibility-label">
+            <input type="radio" name="visibility" value="public" checked>
+            Public (others can see your watchlist)
+          </label>
+          <label class="visibility-label">
+            <input type="radio" name="visibility" value="private">
+            Private (only you can see)
+          </label>
+        </div>
+        
+        <button id="saveProfileBtn" class="primary-btn save-profile-btn">Save Profile</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Switch Profile Modal -->
+  <div id="switchModal" class="modal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h3>Switch Profile</h3>
+        <button id="closeSwitchModal" class="close-btn">✕</button>
+      </div>
+      <div class="modal-body">
+        <div id="userList" class="user-list"></div>
+        <button id="newProfileBtn" class="primary-btn save-profile-btn">+ Create New Profile</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Discover Users Modal -->
+  <div id="discoverModal" class="modal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h3>Discover Users</h3>
+        <button id="closeDiscoverModal" class="close-btn">✕</button>
+      </div>
+      <div class="modal-body">
+        <div id="discoverList" class="discover-list"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- View User Modal -->
+  <div id="viewUserModal" class="modal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h3 id="viewUserName">User's Watchlist</h3>
+        <button id="closeViewModal" class="close-btn">✕</button>
+      </div>
+      <div class="modal-body">
+        <div id="viewUserWatchlist" class="watchlist-grid"></div>
+      </div>
+    </div>
+  </div>
+
+ <script src="main.js"></script>
+<script src="search.js"></script>
+</body>
+</html>
